@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
@@ -16,5 +17,10 @@ public class CadastroCozinha {
 
 	public List<Cozinha> listar() {
 		return manager.createQuery("select c from Cozinha c", Cozinha.class).getResultList();
+	}
+
+	@Transactional
+	public Cozinha adicionar(Cozinha cozinha) {
+		return manager.merge(cozinha);
 	}
 }
