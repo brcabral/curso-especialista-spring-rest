@@ -8,16 +8,16 @@ import org.springframework.context.ApplicationContext;
 
 import com.algaworks.algafood.AlgafoodApiApplication;
 import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.repository.CozinhaRepository;
 
 public class ConsultaCozinhaMain {
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = new SpringApplicationBuilder(AlgafoodApiApplication.class)
 				.web(WebApplicationType.NONE).run(args);
+		CozinhaRepository cozinhas = applicationContext.getBean(CozinhaRepository.class);
+		List<Cozinha> todasCozinhas = cozinhas.listar();
 
-		CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
-		List<Cozinha> cozinhas = cadastroCozinha.listar();
-
-		for (Cozinha cozinha : cozinhas) {
+		for (Cozinha cozinha : todasCozinhas) {
 			System.out.println(cozinha.getNome());
 		}
 	}
