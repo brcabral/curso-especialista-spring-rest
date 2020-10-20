@@ -46,12 +46,13 @@ public class Restaurante {
 	@Column(nullable = false)
 	private String nome;
 
-	// @DecimalMin("0")
+	@NotNull
 	@PositiveOrZero
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
-	// @Valid -> Faz com que seja validado todos os atributos dentro da classe Cozinha
+	// @Valid -> Faz com que seja validado todos os atributos dentro da classe
+	// Cozinha
 	@Valid
 	@ConvertGroup(from = Default.class, to = CozinhaId.class)
 	@NotNull
