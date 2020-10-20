@@ -47,12 +47,11 @@ public class Restaurante {
 	private String nome;
 
 	@NotNull
-	@PositiveOrZero
+	@PositiveOrZero(message = "{TaxaFrete.invalida}")
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
-	// @Valid -> Faz com que seja validado todos os atributos dentro da classe
-	// Cozinha
+	// @Valid -> Faz com que seja validado todos os atributos dentro da classe Cozinha
 	@Valid
 	@ConvertGroup(from = Default.class, to = CozinhaId.class)
 	@NotNull
