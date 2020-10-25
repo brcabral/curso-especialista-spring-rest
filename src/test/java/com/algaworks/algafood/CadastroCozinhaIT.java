@@ -1,6 +1,5 @@
 package com.algaworks.algafood;
 
-import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.repository.CozinhaRepository;
+import com.algaworks.algafood.util.DatabaseCleaner;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
@@ -21,9 +24,12 @@ import io.restassured.http.ContentType;
 public class CadastroCozinhaIT {
 	@LocalServerPort
 	private int port;
-	
+
 	@Autowired
-	private Flyway flyway;
+	private DatabaseCleaner databaseCleaner;
+
+	@Autowired
+	private CozinhaRepository cozinhaRepository;
 
 	@Before
 	public void setUp() {
@@ -31,7 +37,8 @@ public class CadastroCozinhaIT {
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
 
-		flyway.migrate();
+		databaseCleaner.clearTables();
+		prepararDados();
 	}
 
 	@Test
@@ -48,7 +55,7 @@ public class CadastroCozinhaIT {
 	}
 
 	@Test
-	public void deveConter4Cozinhas_QuandoConsultarCozinhas() {
+	public void deveConter2Cozinhas_QuandoConsultarCozinhas() {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
 		RestAssured
@@ -57,7 +64,7 @@ public class CadastroCozinhaIT {
 			.when()
 				.get()
 			.then()
-				.body("", Matchers.hasSize(4));
+				.body("", Matchers.hasSize(2));
 	}
 
 	@Test
@@ -70,11 +77,11 @@ public class CadastroCozinhaIT {
 			.when()
 				.get()
 			.then()
-				.body("nome", Matchers.hasItems("Indiana", "Tailandesa", "Argentina", "Brasileira"));
+				.body("nome", Matchers.hasItems("Americana", "Tailandesa"));
 	}
 
 	@Test
-	public void testRetornarStatus201_QuandoCadastrarCozinha() {
+	public void deveRetornarStatus201_QuandoCadastrarCozinha() {
 		RestAssured
 			.given()
 				.body("{ \"nome\": \"Chinesa\" }")
@@ -84,5 +91,15 @@ public class CadastroCozinhaIT {
 				.post()
 			.then()
 				.statusCode(HttpStatus.CREATED.value());
+	}
+
+	private void prepararDados() {
+		Cozinha cozinha1 = new Cozinha();
+		cozinha1.setNome("Tailandesa");
+		cozinhaRepository.save(cozinha1);
+
+		Cozinha cozinha2 = new Cozinha();
+		cozinha2.setNome("Americana");
+		cozinhaRepository.save(cozinha2);
 	}
 }
