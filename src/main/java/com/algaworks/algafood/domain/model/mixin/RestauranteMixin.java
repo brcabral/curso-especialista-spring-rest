@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.model.mixin;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.algaworks.algafood.domain.model.Cozinha;
@@ -16,11 +17,11 @@ public abstract class RestauranteMixin {
 	@JsonIgnore
 	private Endereco endereco;
 
-	// @JsonIgnore
-	// private OffsetDateTime dataCadastro;
+	@JsonIgnore
+	private OffsetDateTime dataCadastro;
 
-	// @JsonIgnore
-	// private OffsetDateTime dataAtualizacao;
+	@JsonIgnore
+	private OffsetDateTime dataAtualizacao;
 
 	@JsonIgnore
 	private List<FormaPagamento> formasPagamento;
