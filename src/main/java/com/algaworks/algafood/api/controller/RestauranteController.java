@@ -57,7 +57,8 @@ public class RestauranteController {
 	public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
 			Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
-			return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restaurante));
+			restaurante = cadastroRestaurante.salvar(restaurante);
+			return restauranteModelAssembler.toModel(restaurante);
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
