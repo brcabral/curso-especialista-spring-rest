@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -65,24 +66,18 @@ public class Pedido {
 	private Usuario cliente;
 
 	@Enumerated(EnumType.STRING)
-	private StatusPedido status;
+	private StatusPedido status = StatusPedido.CRIADO;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private FormaPagamento formaPagamento;
 
-	@OneToMany(mappedBy = "pedido")
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<>();
 
 	public void calcularValorTotal() {
+		getItens().forEach(ItemPedido::calcularPrecoTotal);
 		this.subtotal = getItens().stream().map(item -> item.getPrecoTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
-
-	public void definirFrete() {
-		setTaxaFrete(getRestaurante().getTaxaFrete());
-	}
-
-	public void atribuirPedidoAosItens() {
-		getItens().forEach(item -> item.setPedido(this));
+		this.valorTotal = this.subtotal.add(this.taxaFrete);
 	}
 }
