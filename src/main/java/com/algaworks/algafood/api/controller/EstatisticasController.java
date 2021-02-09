@@ -37,7 +37,7 @@ public class EstatisticasController {
 
 		byte[] bytesPdf = vendaReportService.emitirVendasDiarias(filtro, timeOffset);
 		var headers = new HttpHeaders();
-		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment, filename:vendas-diarias.pdf");
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=vendas-diarias.pdf");
 
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).headers(headers).body(bytesPdf);
 	}
