@@ -1,12 +1,17 @@
 package com.algaworks.algafood.domain.service;
 
-import com.lowagie.text.pdf.codec.Base64.InputStream;
+import java.io.InputStream;
+import java.util.UUID;
 
 import lombok.Builder;
 import lombok.Getter;
 
 public interface FotoStorageService {
 	void armazenar(NovaFoto novaFoto);
+
+	default String gerarNomeArquivo(String nomeOriginal) {
+		return UUID.randomUUID().toString() + "_" + nomeOriginal;
+	}
 
 	@Getter
 	@Builder
