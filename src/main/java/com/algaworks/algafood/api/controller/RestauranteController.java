@@ -31,7 +31,7 @@ import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.annotation.JsonView;
 
-@CrossOrigin
+@CrossOrigin(maxAge = 15)
 @RestController
 @RequestMapping(value = "/restaurantes")
 public class RestauranteController {
@@ -129,7 +129,7 @@ public class RestauranteController {
 		cadastroRestaurante.abrir(restauranteId);
 	}
 
-	@PutMapping("/{restauranteId}/fechamanto")
+	@PutMapping("/{restauranteId}/fechamento")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void fechar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.fechar(restauranteId);
