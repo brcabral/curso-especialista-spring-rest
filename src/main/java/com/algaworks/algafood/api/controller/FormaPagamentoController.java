@@ -47,7 +47,14 @@ public class FormaPagamentoController {
 		List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
 		List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoModelAssembler
 				.toCollectionModel(todasFormasPagamentos);
-		return ResponseEntity.ok().cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS)).body(formasPagamentosModel);
+
+		return ResponseEntity.ok()
+//				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+//				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+//				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+				.cacheControl(CacheControl.noCache())
+//				.cacheControl(CacheControl.noStore())
+				.body(formasPagamentosModel);
 	}
 
 	@GetMapping("/{formaPagamentoId}")
