@@ -62,14 +62,28 @@ public class FormaPagamentoController {
 		List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
 		List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoModelAssembler
 				.toCollectionModel(todasFormasPagamentos);
-		return ResponseEntity.ok().cacheControl(CacheControl.noCache()).eTag(eTag).body(formasPagamentosModel);
+		return ResponseEntity.ok().cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS)).eTag(eTag)
+				.body(formasPagamentosModel);
 	}
 
 	@GetMapping("/{formaPagamentoId}")
-	public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long formaPagamentoId) {
+	public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long formaPagamentoId, ServletWebRequest request) {
+		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+		String eTag = "0";
+		OffsetDateTime dataAtualizacao = formaPagamentoRepository.getDataAtualizacaoById(formaPagamentoId);
+
+		if (dataAtualizacao != null) {
+			eTag = String.valueOf(dataAtualizacao.toEpochSecond());
+		}
+
+		if (request.checkNotModified(eTag)) {
+			return null;
+		}
+
 		FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
 		FormaPagamentoModel formaPagamentoModel = formaPagamentoModelAssembler.toModel(formaPagamento);
-		return ResponseEntity.ok().cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS)).body(formaPagamentoModel);
+		return ResponseEntity.ok().cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS)).eTag(eTag)
+				.body(formaPagamentoModel);
 	}
 
 	@PostMapping
