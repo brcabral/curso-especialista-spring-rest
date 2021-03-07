@@ -25,6 +25,7 @@ import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Api(tags = "Cidades")
 @RestController
@@ -43,16 +44,19 @@ public class CidadeController {
 	private CidadeInputDisassembler cidadeInputDisassembler;
 
 	@GetMapping
+	@ApiOperation("Lista as cidades")
 	public List<CidadeModel> listar() {
 		return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll());
 	}
 
 	@GetMapping("/{cidadeId}")
+	@ApiOperation("Busca uma cidade por ID")
 	public CidadeModel buscar(@PathVariable Long cidadeId) {
 		return cidadeModelAssembler.toModel(cadastroCidade.buscarOuFalhar(cidadeId));
 	}
 
 	@PostMapping
+	@ApiOperation("Cadastra uma cidade")
 	public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
 		try {
 			Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
@@ -64,6 +68,7 @@ public class CidadeController {
 	}
 
 	@PutMapping("/{cidadeId}")
+	@ApiOperation("Atualiza uma cidade por ID")
 	public CidadeModel atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInput cidadeInput) {
 		try {
 			Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
@@ -76,6 +81,7 @@ public class CidadeController {
 	}
 
 	@DeleteMapping("/{cidadeId}")
+	@ApiOperation("Exclui uma cidade por ID")
 	public void remover(@PathVariable Long cidadeId) {
 		cadastroCidade.excluir(cidadeId);
 	}
