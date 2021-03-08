@@ -6,16 +6,19 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.algaworks.algafood.api.exceptionhandler.Problem;
+import com.algaworks.algafood.core.openapi.model.PageableModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
@@ -36,15 +39,14 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 		TypeResolver typeResolver = new TypeResolver();
 
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api")).build()
-				.useDefaultResponseMessages(false).globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
-				.useDefaultResponseMessages(false)
-				.globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
-				.useDefaultResponseMessages(false)
+				.apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api")).paths(PathSelectors.any())
+				.build().useDefaultResponseMessages(false)
+				.globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
 				.globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
-				.useDefaultResponseMessages(false)
+				.globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
 				.globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-				.additionalModels(typeResolver.resolve(Problem.class)).apiInfo(apiInfo())
+				.additionalModels(typeResolver.resolve(Problem.class))
+				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class).apiInfo(apiInfo())
 				.tags(new Tag("Cidades", "Gerencia as cidades"), new Tag("Grupos", "Gerencia os grupos de usuários"));
 	}
 
@@ -75,7 +77,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 						.message("Erro interno no servidor").responseModel(new ModelRef("Problema")).build());
 	}
 
-	public ApiInfo apiInfo() {
+	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("AlgaFood API").description("API aberta para clientes e restaurantes")
 				.version("1").contact(new Contact("AlgaFood", "http://algafood.com", "contato@algafood.com")).build();
 	}
