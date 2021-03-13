@@ -34,6 +34,9 @@ import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 @RestController
 @RequestMapping("/pedidos")
 public class PedidoController {
@@ -52,6 +55,9 @@ public class PedidoController {
 	@Autowired
 	private PedidoInputDisassembler pedidoInputDisassembler;
 
+	@ApiImplicitParams({
+			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
+					name = "campos", paramType = "query", type = "string") })
 	@GetMapping
 	public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
 		pageable = traduzirPageable(pageable);
@@ -64,6 +70,9 @@ public class PedidoController {
 		return pedidosResumoModelPage;
 	}
 
+	@ApiImplicitParams({
+			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
+					name = "campos", paramType = "query", type = "string") })
 	@GetMapping("/{codigoPedido}")
 	public PedidoModel buscar(@PathVariable String codigoPedido) {
 		return pedidoModelAssembler.toModel(pedidoService.buscarOuFalhar(codigoPedido));
@@ -87,17 +96,9 @@ public class PedidoController {
 	}
 
 	private Pageable traduzirPageable(Pageable apiPageable) {
-		var mapeamento = Map.of(
-				"codigo", "codigo",
-				"subtotal", "subtotal",
-				"taxaFrete", "taxaFrete",
-				"valorTotal", "valorTotal",
-				"dataCriacao", "dataCriacao",
-				"restaurante.nome", "restaurante.nome",
-				"restaurante.id", "restaurante.id",
-				"cliente.id", "cliente.id",
-				"cliente.nome", "cliente.nome"
-			);
+		var mapeamento = Map.of("codigo", "codigo", "subtotal", "subtotal", "taxaFrete", "taxaFrete", "valorTotal",
+				"valorTotal", "dataCriacao", "dataCriacao", "restaurante.nome", "restaurante.nome", "restaurante.id",
+				"restaurante.id", "cliente.id", "cliente.id", "cliente.nome", "cliente.nome");
 
 		return PageableTranslator.translate(apiPageable, mapeamento);
 	}
