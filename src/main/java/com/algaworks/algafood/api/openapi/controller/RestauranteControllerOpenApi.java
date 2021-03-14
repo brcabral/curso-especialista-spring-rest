@@ -44,7 +44,6 @@ public interface RestauranteControllerOpenApi {
 			@ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class) })
 	RestauranteModel atualizar(
 			@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId,
-
 			@ApiParam(name = "corpo", value = "Representação de um restaurante com os novos dados", required = true) RestauranteInput restauranteInput);
 
 	@ApiOperation("Ativa um restaurante por ID")

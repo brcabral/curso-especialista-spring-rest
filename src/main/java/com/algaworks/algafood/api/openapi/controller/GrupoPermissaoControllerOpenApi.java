@@ -22,13 +22,11 @@ public interface GrupoPermissaoControllerOpenApi {
 	@ApiResponses({ @ApiResponse(code = 204, message = "Desassociação realizada com sucesso"),
 			@ApiResponse(code = 404, message = "Grupo ou permissão não encontrada", response = Problem.class) })
 	void desassociar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId,
-
 			@ApiParam(value = "ID da permissão", example = "1", required = true) Long permissaoId);
 
 	@ApiOperation("Associação de permissão com grupo")
 	@ApiResponses({ @ApiResponse(code = 204, message = "Associação realizada com sucesso"),
 			@ApiResponse(code = 404, message = "Grupo ou permissão não encontrada", response = Problem.class) })
 	void associar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId,
-
 			@ApiParam(value = "ID da permissão", example = "1", required = true) Long permissaoId);
 }

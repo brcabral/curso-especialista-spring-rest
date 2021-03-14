@@ -31,7 +31,6 @@ public interface EstadoControllerOpenApi {
 	@ApiResponses({ @ApiResponse(code = 200, message = "Estado atualizado"),
 			@ApiResponse(code = 404, message = "Estado não encontrado", response = Problem.class) })
 	EstadoModel atualizar(@ApiParam(value = "ID de um estado", example = "1", required = true) Long estadoId,
-
 			@ApiParam(name = "corpo", value = "Representação de um estado com os novos dados", required = true) EstadoInput estadoInput);
 
 	@ApiOperation("Exclui um estado por ID")

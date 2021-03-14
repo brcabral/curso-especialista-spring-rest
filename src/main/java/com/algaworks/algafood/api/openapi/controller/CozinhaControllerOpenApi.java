@@ -32,7 +32,6 @@ public interface CozinhaControllerOpenApi {
 	@ApiResponses({ @ApiResponse(code = 200, message = "Cozinha atualizada"),
 			@ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problem.class) })
 	CozinhaModel atualizar(@ApiParam(value = "ID de uma cozinha", example = "1", required = true) Long cozinhaId,
-
 			@ApiParam(name = "corpo", value = "Representação de uma cozinha com os novos dados", required = true) CozinhaInput cozinhaInput);
 
 	@ApiOperation("Exclui uma cozinha por ID")
