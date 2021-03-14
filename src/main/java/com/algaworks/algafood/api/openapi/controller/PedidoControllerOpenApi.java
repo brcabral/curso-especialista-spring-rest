@@ -19,9 +19,10 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(tags = "Pedidos")
 public interface PedidoControllerOpenApi {
-	@ApiImplicitParams({
-			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula", name = "campos", paramType = "query", type = "string") })
 	@ApiOperation("Pesquisa os pedidos")
+	@ApiImplicitParams({
+			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
+					name = "campos", paramType = "query", type = "string") })
 	Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, Pageable pageable);
 
 	@ApiOperation("Registra um pedido")
@@ -29,9 +30,10 @@ public interface PedidoControllerOpenApi {
 	PedidoModel adicionar(
 			@ApiParam(name = "corpo", value = "Representação de um novo pedido", required = true) PedidoInput pedidoInput);
 
-	@ApiImplicitParams({
-			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula", name = "campos", paramType = "query", type = "string") })
 	@ApiOperation("Busca um pedido por código")
+	@ApiImplicitParams({
+			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
+					name = "campos", paramType = "query", type = "string") })
 	@ApiResponses({ @ApiResponse(code = 404, message = "Pedido não encontrado", response = Problem.class) })
 	PedidoModel buscar(
 			@ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55", required = true) String codigoPedido);

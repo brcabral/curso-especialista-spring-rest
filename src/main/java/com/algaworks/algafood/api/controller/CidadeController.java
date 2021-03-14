@@ -41,16 +41,19 @@ public class CidadeController implements CidadeControllerOpenApi {
 	@Autowired
 	private CidadeInputDisassembler cidadeInputDisassembler;
 
+	@Override
 	@GetMapping
 	public List<CidadeModel> listar() {
 		return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll());
 	}
 
+	@Override
 	@GetMapping("/{cidadeId}")
 	public CidadeModel buscar(@PathVariable Long cidadeId) {
 		return cidadeModelAssembler.toModel(cadastroCidade.buscarOuFalhar(cidadeId));
 	}
 
+	@Override
 	@PostMapping
 	public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
 		try {
@@ -62,6 +65,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 		}
 	}
 
+	@Override
 	@PutMapping("/{cidadeId}")
 	public CidadeModel atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInput cidadeInput) {
 		try {
@@ -74,6 +78,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 		}
 	}
 
+	@Override
 	@DeleteMapping("/{cidadeId}")
 	public void remover(@PathVariable Long cidadeId) {
 		cadastroCidade.excluir(cidadeId);

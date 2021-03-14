@@ -41,16 +41,19 @@ public class GrupoController implements GrupoControllerOpenApi {
 	@Autowired
 	private GrupoInputDisassembler grupoInputDisassembler;
 
+	@Override
 	@GetMapping
 	public List<GrupoModel> listar() {
 		return grupoModelAssembler.toCollectionModel(grupoRepository.findAll());
 	}
 
+	@Override
 	@GetMapping("{grupoId}")
 	public GrupoModel buscar(@PathVariable Long grupoId) {
 		return grupoModelAssembler.toModel(cadastroGrupo.buscarOuFalhar(grupoId));
 	}
 
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public GrupoModel adicionar(@RequestBody @Valid GrupoInput grupoInput) {
@@ -59,6 +62,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return grupoModelAssembler.toModel(grupo);
 	}
 
+	@Override
 	@PutMapping("/{grupoId}")
 	public GrupoModel atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInput grupoInput) {
 		Grupo grupoAtual = cadastroGrupo.buscarOuFalhar(grupoId);
@@ -67,6 +71,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return grupoModelAssembler.toModel(grupoAtual);
 	}
 
+	@Override
 	@DeleteMapping("/{grupoId}")
 	public void remover(@PathVariable Long grupoId) {
 		cadastroGrupo.excluir(grupoId);
