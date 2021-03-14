@@ -19,7 +19,7 @@ public class EnderecoInput {
 	private String logradouro;
 
 	@NotNull
-	@ApiModelProperty(example = "1500", required = true)
+	@ApiModelProperty(example = "\"1500\"", required = true)
 	private String numero;
 
 	@ApiModelProperty(example = "Apto 901")
