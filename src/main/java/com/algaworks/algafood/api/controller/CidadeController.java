@@ -1,14 +1,10 @@
 package com.algaworks.algafood.api.controller;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.ResourceUriHelper;
@@ -49,39 +46,18 @@ public class CidadeController implements CidadeControllerOpenApi {
 	@Override
 	@GetMapping
 	public CollectionModel<CidadeModel> listar() {
-		List<Cidade> todasCidades = cidadeRepository.findAll();
-		List<CidadeModel> cidadesModel = cidadeModelAssembler.toCollectionModel(todasCidades);
-
-		cidadesModel.forEach(cidadeModel -> {
-			cidadeModel.add(linkTo(methodOn(CidadeController.class).buscar(cidadeModel.getId())).withSelfRel());
-			cidadeModel.add(linkTo(methodOn(CidadeController.class).listar()).withRel("cidades"));
-
-			cidadeModel.getEstado().add(
-					linkTo(methodOn(EstadoController.class).buscar(cidadeModel.getEstado().getId())).withSelfRel());
-		});
-
-		CollectionModel<CidadeModel> cidadesCollectionModel = new CollectionModel<>(cidadesModel);
-		cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
-		return cidadesCollectionModel;
+		return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll());
 	}
 
 	@Override
 	@GetMapping("/{cidadeId}")
 	public CidadeModel buscar(@PathVariable Long cidadeId) {
-		Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
-		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidade);
-
-		cidadeModel.add(linkTo(methodOn(CidadeController.class).buscar(cidadeModel.getId())).withSelfRel());
-		cidadeModel.add(linkTo(methodOn(CidadeController.class).listar()).withRel("cidades"));
-
-		cidadeModel.getEstado()
-				.add(linkTo(methodOn(EstadoController.class).buscar(cidadeModel.getEstado().getId())).withSelfRel());
-
-		return cidadeModel;
+		return cidadeModelAssembler.toModel(cadastroCidade.buscarOuFalhar(cidadeId));
 	}
 
 	@Override
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
 		try {
 			Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
@@ -109,6 +85,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 
 	@Override
 	@DeleteMapping("/{cidadeId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long cidadeId) {
 		cadastroCidade.excluir(cidadeId);
 	}
