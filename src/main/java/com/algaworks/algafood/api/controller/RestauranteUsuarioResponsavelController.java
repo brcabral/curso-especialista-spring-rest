@@ -34,7 +34,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 	public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 		return usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis()).removeLinks()
-				.add(algaLinks.linkToResponsaveisRestaurante(restauranteId));
+				.add(algaLinks.linkToRestauranteResponsaveis(restauranteId));
 	}
 
 	@Override
