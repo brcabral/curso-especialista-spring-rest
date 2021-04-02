@@ -13,11 +13,11 @@ import lombok.Data;
 @ApiModel("CidadesModel")
 public class CidadesModelOpenApi {
 	private Links _links;
-	private CidadeEmbeddedModelOpenApi _embedded;
+	private CidadesEmbeddedModelOpenApi _embedded;
 
 	@Data
 	@ApiModel("CidadesEmbeddedModel")
-	public class CidadeEmbeddedModelOpenApi {
+	public class CidadesEmbeddedModelOpenApi {
 		private List<CidadeModel> cidades;
 	}
 }
