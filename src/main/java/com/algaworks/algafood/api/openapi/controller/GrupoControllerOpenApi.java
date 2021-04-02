@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.api.model.GrupoModel;
@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Grupos")
 public interface GrupoControllerOpenApi {
 	@ApiOperation("Lista os grupos")
-	List<GrupoModel> listar();
+	CollectionModel<GrupoModel> listar();
 
 	@ApiOperation("Busca um grupo por ID")
 	@ApiResponses({ @ApiResponse(code = 400, message = "ID da grupo inválido", response = Problem.class),
