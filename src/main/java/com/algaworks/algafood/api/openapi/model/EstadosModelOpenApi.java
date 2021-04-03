@@ -15,8 +15,8 @@ public class EstadosModelOpenApi {
 	private Links _links;
 	private EstadosEmbeddedModelOpenApi _embedded;
 
-	@ApiModel("EstadosEmbeddedModel")
 	@Data
+	@ApiModel("EstadosEmbeddedModel")
 	public class EstadosEmbeddedModelOpenApi {
 		private List<EstadoModel> estados;
 	}
