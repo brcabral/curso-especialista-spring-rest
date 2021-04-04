@@ -45,6 +45,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 
 	@Override
 	@GetMapping
+	@Deprecated
 	public CollectionModel<CidadeModel> listar() {
 		return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll());
 	}
