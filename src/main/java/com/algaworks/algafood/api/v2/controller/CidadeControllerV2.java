@@ -23,6 +23,7 @@ import com.algaworks.algafood.api.v2.assembler.CidadeInputDisassemblerV2;
 import com.algaworks.algafood.api.v2.assembler.CidadeModelAssemblerV2;
 import com.algaworks.algafood.api.v2.model.CidadeModelV2;
 import com.algaworks.algafood.api.v2.model.input.CidadeInputV2;
+import com.algaworks.algafood.api.v2.openapi.CidadeControllerV2OpenApi;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
@@ -31,7 +32,7 @@ import com.algaworks.algafood.domain.service.CadastroCidadeService;
 
 @RestController
 @RequestMapping(path = "/v2/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CidadeControllerV2 {
+public class CidadeControllerV2 implements CidadeControllerV2OpenApi {
 	@Autowired
 	private CidadeRepository cidadeRepository;
 
@@ -44,18 +45,21 @@ public class CidadeControllerV2 {
 	@Autowired
 	private CidadeInputDisassemblerV2 cidadeInputDisassembler;
 
+	@Override
 	@GetMapping
 	public CollectionModel<CidadeModelV2> listar() {
 		List<Cidade> todasCidades = cidadeRepository.findAll();
 		return cidadeModelAssembler.toCollectionModel(todasCidades);
 	}
 
+	@Override
 	@GetMapping("/{cidadeId}")
 	public CidadeModelV2 buscar(@PathVariable Long cidadeId) {
 		Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 		return cidadeModelAssembler.toModel(cidade);
 	}
 
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CidadeModelV2 adicionar(@RequestBody @Valid CidadeInputV2 cidadeInput) {
@@ -70,6 +74,7 @@ public class CidadeControllerV2 {
 		}
 	}
 
+	@Override
 	@PutMapping("/{cidadeId}")
 	public CidadeModelV2 atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInputV2 cidadeInput) {
 		try {
@@ -82,6 +87,7 @@ public class CidadeControllerV2 {
 		}
 	}
 
+	@Override
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long cidadeId) {
