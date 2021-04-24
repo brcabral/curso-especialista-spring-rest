@@ -1,91 +1,93 @@
+const config = {
+    clientId: "foodanalytics",
+    clientSecret: "food123",
+    authorizeUrl: "http://auth.algafood.local:8081/oauth/authorize",
+    tokenUrl: "http://auth.algafood.local:8081/oauth/token",
+    callbackUrl: "http://www.foodanalytics.local:80",
+    cozinhasUrl: "http://api.algafood.local:8080/v1/cozinhas"
+};
+
+let accessToken = "";
+
 function consultar() {
+    alert("Consultando recurso com access token " + accessToken);
+
     $.ajax({
-        url: "http://api.algafood.local:8080/formas-pagamento",
+        url: config.cozinhasUrl,
         type: "get",
 
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", "Bearer " + accessToken);
+        },
+
         success: function (response) {
-            preencherTabela(response);
+            var json = JSON.stringify(response);
+            $("#resultado").text(json);
+        },
+
+        error: function (error) {
+            alert("Erro ao consultar recurso");
         }
     });
 }
 
-function cadastrar() {
-    var formaPagamentoJson = JSON.stringify({
-        "descricao": $("#campo-descricao").val()
-    });
+function gerarAccessToken(code) {
+    alert("Gerando access token com code " + code);
 
-    console.log(formaPagamentoJson);
+    let clientAuth = btoa(config.clientId + ":" + config.clientSecret);
+
+    let params = new URLSearchParams();
+    params.append("grant_type", "authorization_code");
+    params.append("code", code);
+    params.append("redirect_uri", config.callbackUrl);
 
     $.ajax({
-        url: "http://api.algafood.local:8080/formas-pagamento",
+        url: config.tokenUrl,
         type: "post",
-        data: formaPagamentoJson,
-        contentType: "application/json",
+        data: params.toString(),
+        contentType: "application/x-www-form-urlencoded",
+
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", "Basic " + clientAuth);
+        },
 
         success: function (response) {
-            alert("Forma de pagamento adicionada!");
-            consultar();
+            accessToken = response.access_token;
+
+            alert("Access token gerado: " + accessToken);
         },
 
         error: function (error) {
-            if (error.status >= 400 && error.status <= 499) {
-                var problem = JSON.parse(error.responseText);
-                alert(problem.userMessage);
-            } else {
-                alert("Erro ao cadastrar forma de pagamento!");
-            }
+            alert("Erro ao gerar access key");
         }
     });
 }
 
-function excluir(formaPagamento) {
-    var url = "http://api.algafood.local:8080/formas-pagamento/" + formaPagamento.id;
+function login() {
+    // https://auth0.com/docs/protocols/oauth2/oauth-state
+    let state = btoa(Math.random());
+    localStorage.setItem("clientState", state);
 
-    $.ajax({
-        url: url,
-        type: "delete",
+    window.location.href = `${config.authorizeUrl}?response_type=code&client_id=${config.clientId}&state=${state}&redirect_uri=${config.callbackUrl}`;
+}
 
-        success: function (response) {
-            consultar();
+$(document).ready(function () {
+    let params = new URLSearchParams(window.location.search);
 
-            alert("Forma de pagamento removida!");
-        },
+    let code = params.get("code");
+    let state = params.get("state");
+    let currentState = localStorage.getItem("clientState");
 
-        error: function (error) {
-            // tratando todos os erros da categoria 4xx
-            if (error.status >= 400 && error.status <= 499) {
-                var problem = JSON.parse(error.responseText);
-                alert(problem.userMessage);
-            } else {
-                alert("Erro ao remover forma de pagamento!");
-            }
+    if (code) {
+        // window.history.replaceState(null, null, "/");
+
+        if (currentState == state) {
+            gerarAccessToken(code);
+        } else {
+            alert("State inválido");
         }
-    });
-}
-
-function preencherTabela(formasPagamento) {
-    $("#tabela tbody tr").remove();
-
-    $.each(formasPagamento, function (i, formaPagamento) {
-        var linha = $("<tr>");
-
-        var linkAcao = $("<a href='#'>")
-            .text("Excluir")
-            .click(function (event) {
-                event.preventDefault();
-                excluir(formaPagamento);
-            });
-
-        linha.append(
-            $("<td>").text(formaPagamento.id),
-            $("<td>").text(formaPagamento.descricao),
-            $("<td>").append(linkAcao)
-        );
-
-        linha.appendTo("#tabela");
-    });
-}
-
+    }
+});
 
 $("#btn-consultar").click(consultar);
-$("#btn-cadastrar").click(cadastrar);
+$("#btn-login").click(login);
