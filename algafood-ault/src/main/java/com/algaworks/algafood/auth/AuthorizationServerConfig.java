@@ -34,6 +34,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.authorizedGrantTypes("authorization_code").scopes("write", "read")
 				.redirectUris("http://foodanalytics.local:80")
 
+				.and().withClient("webadmin").authorizedGrantTypes("implicit").scopes("write", "read")
+				.redirectUris("http://aplicacao-cliente")
+
 				.and().withClient("faturamento").secret(passwordEncoder.encode("faturamento123"))
 				.authorizedGrantTypes("client_credentials").scopes("write", "read")
 
