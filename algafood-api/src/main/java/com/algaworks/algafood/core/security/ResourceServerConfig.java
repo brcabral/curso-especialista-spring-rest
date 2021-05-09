@@ -15,13 +15,12 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-//		http.authorizeRequests().anyRequest().authenticated().and().cors().and().oauth2ResourceServer().opaqueToken();
 		http.authorizeRequests().anyRequest().authenticated().and().cors().and().oauth2ResourceServer().jwt();
 	}
 
 	@Bean
 	public JwtDecoder jwtDecoder() {
-		var secretKey = new SecretKeySpec("89a7sd89f7as98f7dsa98fds7fd89sasd9898asdf98s".getBytes(), "HmacSHA256");
+		var secretKey = new SecretKeySpec("kajfsouqwrjwkj23csdjk2398rsfj23u0fsdklr0f3u09".getBytes(), "HmacSHA256");
 		return NimbusJwtDecoder.withSecretKey(secretKey).build();
 	}
 }
