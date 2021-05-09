@@ -22,7 +22,6 @@
 		<jasperreports.version>6.14.0</jasperreports.version>
 		<springfox.version>2.9.2</springfox.version>
 		<logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
-		<oauth2-oidc-sdk.version>6.21.2</oauth2-oidc-sdk.version>
 	</properties>
 
 	<dependencies>
@@ -177,12 +176,6 @@
 			<artifactId>
 			spring-boot-starter-oauth2-resource-server
 		</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.nimbusds</groupId>
-			<artifactId>oauth2-oidc-sdk</artifactId>
-			<version>${oauth2-oidc-sdk.version}</version>
 		</dependency>
 	</dependencies>
 
