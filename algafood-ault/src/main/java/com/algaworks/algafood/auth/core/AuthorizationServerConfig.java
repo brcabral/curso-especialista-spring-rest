@@ -41,19 +41,19 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient("algafood-web").secret(passwordEncoder.encode("web123"))
-				.authorizedGrantTypes("password", "refresh_token").scopes("write", "read")
+				.authorizedGrantTypes("password", "refresh_token").scopes("WRITE", "READ")
 				.accessTokenValiditySeconds(6 * 60 * 60) // 6 horas
 				.refreshTokenValiditySeconds(30 * 24 * 60 * 60) // 30 dias
 
 				.and().withClient("foodanalytics").secret(passwordEncoder.encode(""))
-				.authorizedGrantTypes("authorization_code").scopes("write", "read")
+				.authorizedGrantTypes("authorization_code").scopes("WRITE", "READ")
 				.redirectUris("http://foodanalytics.local:80")
 
-				.and().withClient("webadmin").authorizedGrantTypes("implicit").scopes("write", "read")
+				.and().withClient("webadmin").authorizedGrantTypes("implicit").scopes("WRITE", "READ")
 				.redirectUris("http://aplicacao-cliente")
 
 				.and().withClient("faturamento").secret(passwordEncoder.encode("faturamento123"))
-				.authorizedGrantTypes("client_credentials").scopes("write", "read")
+				.authorizedGrantTypes("client_credentials").scopes("WRITE", "READ")
 
 				.and().withClient("checktoken").secret(passwordEncoder.encode("check123"));
 	}
