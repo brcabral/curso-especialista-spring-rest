@@ -17,6 +17,7 @@ import com.algaworks.algafood.api.v1.AlgaLinks;
 import com.algaworks.algafood.api.v1.assembler.FormaPagamentoModelAssembler;
 import com.algaworks.algafood.api.v1.model.FormaPagamentoModel;
 import com.algaworks.algafood.api.v1.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 
@@ -34,6 +35,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 
 	@Override
 	@GetMapping
+	@CheckSecurity.Restaurantes.PodeConsultar
 	public CollectionModel<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroResturante.buscarOuFalhar(restauranteId);
 		CollectionModel<FormaPagamentoModel> formasPagamentoModel = formaPagamentoModelAssembler
@@ -52,6 +54,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@Override
 	@PutMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@CheckSecurity.Restaurantes.PodeEditar
 	public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
 		cadastroResturante.associarFormaPagamento(restauranteId, formaPagamentoId);
 		return ResponseEntity.noContent().build();
@@ -60,6 +63,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@Override
 	@DeleteMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@CheckSecurity.Restaurantes.PodeEditar
 	public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
 		cadastroResturante.desassociarFormaPagamento(restauranteId, formaPagamentoId);
 		return ResponseEntity.noContent().build();
