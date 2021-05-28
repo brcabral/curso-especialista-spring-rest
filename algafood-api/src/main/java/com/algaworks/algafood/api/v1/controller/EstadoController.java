@@ -21,6 +21,7 @@ import com.algaworks.algafood.api.v1.assembler.EstadoModelAssembler;
 import com.algaworks.algafood.api.v1.model.EstadoModel;
 import com.algaworks.algafood.api.v1.model.input.EstadoInput;
 import com.algaworks.algafood.api.v1.openapi.controller.EstadoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 import com.algaworks.algafood.domain.service.CadastroEstadoService;
@@ -42,12 +43,14 @@ public class EstadoController implements EstadoControllerOpenApi {
 
 	@Override
 	@GetMapping
+	@CheckSecurity.Estados.PodeConsultar
 	public CollectionModel<EstadoModel> listar() {
 		return estadoModelAssembler.toCollectionModel(estadoRepository.findAll());
 	}
 
 	@Override
 	@GetMapping("/{estadoId}")
+	@CheckSecurity.Estados.PodeConsultar
 	public EstadoModel buscar(@PathVariable Long estadoId) {
 		return estadoModelAssembler.toModel(cadastroEstado.buscarOuFalhar(estadoId));
 	}
@@ -55,6 +58,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@CheckSecurity.Estados.PodeEditar
 	public EstadoModel adicionar(@RequestBody @Valid EstadoInput estadoInput) {
 		Estado estado = estadoInputDisassembler.toDomainObject(estadoInput);
 		estado = cadastroEstado.salvar(estado);
@@ -63,6 +67,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 
 	@Override
 	@PutMapping("/{estadoId}")
+	@CheckSecurity.Estados.PodeEditar
 	public EstadoModel atualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInput estadoInput) {
 		Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
 		estadoInputDisassembler.copyToDomainObject(estadoInput, estadoAtual);
@@ -72,6 +77,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 
 	@Override
 	@DeleteMapping("/{estadoId}")
+	@CheckSecurity.Estados.PodeEditar
 	public void remover(@PathVariable Long estadoId) {
 		cadastroEstado.excluir(estadoId);
 	}
