@@ -83,6 +83,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@CheckSecurity.Pedidos.PodeCriar
 	public PedidoModel adicionar(@RequestBody @Valid PedidoInput pedidoInput) {
 		try {
 			Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);

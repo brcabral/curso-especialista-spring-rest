@@ -7,9 +7,9 @@
 
 	<named-query name="Restaurante.consultarPorNome">
 		<query>
-			from Restaurante
-			where nome like concat('%', :nome, '%')
-			and cozinha.id = :id
+			FROM Restaurante
+			WHERE nome like concat('%', :nome, '%')
+			AND cozinha.id = :id
 		</query>
 	</named-query>
 
@@ -19,6 +19,17 @@
 			FROM Restaurante rest
 			JOIN rest.responsaveis resp
 			WHERE rest.id = :restauranteId
+			AND resp.id = :usuarioId
+		</query>
+	</named-query>
+
+	<named-query name="Pedido.isPedidoGerenciadoPor">
+		<query>
+			SELECT CASE WHEN COUNT(1) > 0 THEN true ELSE false END
+			FROM Pedido ped
+			JOIN ped.restaurante rest
+			JOIN rest.responsaveis resp
+			WHERE ped.codigo = :codigoPedido
 			AND resp.id = :usuarioId
 		</query>
 	</named-query>
