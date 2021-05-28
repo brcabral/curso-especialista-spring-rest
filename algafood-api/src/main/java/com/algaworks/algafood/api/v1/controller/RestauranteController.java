@@ -84,7 +84,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
 			Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
@@ -97,7 +97,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 
 	@Override
 	@PutMapping("/{restauranteId}")
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	public RestauranteModel atualizar(@PathVariable Long restauranteId,
 			@RequestBody @Valid RestauranteInput restauranteInput) {
 
@@ -113,7 +113,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Override
 	@PutMapping("/{restauranteId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	public ResponseEntity<Void> ativar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.ativar(restauranteId);
 		return ResponseEntity.noContent().build();
@@ -122,7 +122,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Override
 	@DeleteMapping("/{restauranteId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	public ResponseEntity<Void> inativar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.inativar(restauranteId);
 		return ResponseEntity.noContent().build();
@@ -131,7 +131,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Override
 	@PutMapping("/ativacoes")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
 		try {
 			cadastroRestaurante.ativar(restauranteIds);
@@ -143,7 +143,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Override
 	@DeleteMapping("/ativacoes")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
 		try {
 			cadastroRestaurante.inativar(restauranteIds);
@@ -155,7 +155,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Override
 	@PutMapping("/{restauranteId}/aberto")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public ResponseEntity<Void> abrir(@PathVariable Long restauranteId) {
 		cadastroRestaurante.abrir(restauranteId);
 		return ResponseEntity.noContent().build();
@@ -164,7 +164,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Override
 	@PutMapping("/{restauranteId}/fechamento")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public ResponseEntity<Void> fechar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.fechar(restauranteId);
 		return ResponseEntity.noContent().build();

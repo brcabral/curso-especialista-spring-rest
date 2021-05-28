@@ -80,7 +80,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@CheckSecurity.Restaurantes.PodeConsultar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public ProdutoModel adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
 		Restaurante restaurante = cadastroResturante.buscarOuFalhar(restauranteId);
 		Produto produto = produtoInputDisassembler.toDomainObject(produtoInput);
@@ -91,7 +91,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
 	@Override
 	@PutMapping("/{produtoId}")
-	@CheckSecurity.Restaurantes.PodeConsultar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public ProdutoModel atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId,
 			@RequestBody @Valid ProdutoInput produtoInput) {
 		Produto produtoAtual = cadastroProduto.buscarOuFalhar(restauranteId, produtoId);

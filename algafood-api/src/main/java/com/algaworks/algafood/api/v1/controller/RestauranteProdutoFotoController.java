@@ -52,7 +52,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 
 	@Override
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
 			@Valid FotoProdutoInput fotoProdutoInput, @RequestPart(required = true) MultipartFile arquivo)
 			throws IOException {
@@ -98,7 +98,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 	@Override
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public void excluir(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		catalogoFotoProduto.excluir(restauranteId, produtoId);
 	}

@@ -54,7 +54,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@Override
 	@PutMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
 		cadastroResturante.associarFormaPagamento(restauranteId, formaPagamentoId);
 		return ResponseEntity.noContent().build();
@@ -63,7 +63,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@Override
 	@DeleteMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
 		cadastroResturante.desassociarFormaPagamento(restauranteId, formaPagamentoId);
 		return ResponseEntity.noContent().build();
