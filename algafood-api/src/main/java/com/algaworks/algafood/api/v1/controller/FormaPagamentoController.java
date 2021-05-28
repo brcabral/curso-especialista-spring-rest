@@ -29,6 +29,7 @@ import com.algaworks.algafood.api.v1.assembler.FormaPagamentoModelAssembler;
 import com.algaworks.algafood.api.v1.model.FormaPagamentoModel;
 import com.algaworks.algafood.api.v1.model.input.FormaPagamentoInput;
 import com.algaworks.algafood.api.v1.openapi.controller.FormaPagamentoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
@@ -50,6 +51,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
 	@Override
 	@GetMapping
+	@CheckSecurity.FormasPagamento.PodeConsultar
 	public ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(ServletWebRequest request) {
 		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
 		String eTag = "0";
@@ -73,6 +75,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
 	@Override
 	@GetMapping("/{formaPagamentoId}")
+	@CheckSecurity.FormasPagamento.PodeConsultar
 	public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long formaPagamentoId, ServletWebRequest request) {
 		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
 		String eTag = "0";
@@ -95,6 +98,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@CheckSecurity.FormasPagamento.PodeEditar
 	public FormaPagamentoModel adicionar(@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
 		FormaPagamento formaPagamento = formaPagamentoInputDisassembler.toDomainObject(formaPagamentoInput);
 		formaPagamento = cadastroFormaPagamento.salvar(formaPagamento);
@@ -103,6 +107,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
 	@Override
 	@PutMapping("/{formaPagamentoId}")
+	@CheckSecurity.FormasPagamento.PodeEditar
 	public FormaPagamentoModel atualizar(@PathVariable Long formaPagamentoId,
 			@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
 		FormaPagamento formaPagamentoAtual = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
@@ -113,6 +118,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
 	@Override
 	@DeleteMapping("/{formaPagamentoId}")
+	@CheckSecurity.FormasPagamento.PodeEditar
 	public void remover(@PathVariable Long formaPagamentoId) {
 		cadastroFormaPagamento.excluir(formaPagamentoId);
 	}
