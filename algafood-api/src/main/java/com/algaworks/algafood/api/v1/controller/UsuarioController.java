@@ -23,6 +23,7 @@ import com.algaworks.algafood.api.v1.model.input.SenhaInput;
 import com.algaworks.algafood.api.v1.model.input.UsuarioComSenhaInput;
 import com.algaworks.algafood.api.v1.model.input.UsuarioInput;
 import com.algaworks.algafood.api.v1.openapi.controller.UsuarioControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
@@ -44,12 +45,14 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 
 	@Override
 	@GetMapping
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	public CollectionModel<UsuarioModel> listar() {
 		return usuarioModelAssembler.toCollectionModel(usuarioRepository.findAll());
 	}
 
 	@Override
 	@GetMapping("/{usuarioId}")
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	public UsuarioModel buscar(@PathVariable Long usuarioId) {
 		return usuarioModelAssembler.toModel(cadastroUsuario.buscarOuFalhar(usuarioId));
 	}
@@ -64,6 +67,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 
 	@Override
 	@PutMapping("/{usuarioId}")
+	@CheckSecurity.UsuariosGruposPermissoes.PodeAlterarUsuario
 	public UsuarioModel atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInput usuarioInput) {
 		Usuario usuarioAtual = cadastroUsuario.buscarOuFalhar(usuarioId);
 		usuarioInputDisassembler.copyToDomainObject(usuarioInput, usuarioAtual);
@@ -74,6 +78,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 	@Override
 	@PutMapping("/{usuarioId}/senha")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@CheckSecurity.UsuariosGruposPermissoes.PodeAlterarUsuario
 	public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInput senhaInput) {
 		cadastroUsuario.alterarSenha(usuarioId, senhaInput.getSenhaAtual(), senhaInput.getNovaSenha());
 	}
