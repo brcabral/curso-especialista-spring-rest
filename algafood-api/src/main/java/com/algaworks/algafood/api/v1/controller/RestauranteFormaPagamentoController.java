@@ -17,6 +17,7 @@ import com.algaworks.algafood.api.v1.AlgaLinks;
 import com.algaworks.algafood.api.v1.assembler.FormaPagamentoModelAssembler;
 import com.algaworks.algafood.api.v1.model.FormaPagamentoModel;
 import com.algaworks.algafood.api.v1.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
@@ -25,7 +26,7 @@ import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 @RequestMapping(path = "/v1/restaurantes/{restauranteId}/formas-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteFormaPagamentoController implements RestauranteFormaPagamentoControllerOpenApi {
 	@Autowired
-	private CadastroRestauranteService cadastroResturante;
+	private CadastroRestauranteService cadastroRestaurante;
 
 	@Autowired
 	private FormaPagamentoModelAssembler formaPagamentoModelAssembler;
@@ -33,20 +34,26 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@Autowired
 	private AlgaLinks algaLinks;
 
+	@Autowired
+	private AlgaSecurity algaSecurity;
+
 	@Override
 	@GetMapping
 	@CheckSecurity.Restaurantes.PodeConsultar
 	public CollectionModel<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
-		Restaurante restaurante = cadastroResturante.buscarOuFalhar(restauranteId);
+		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 		CollectionModel<FormaPagamentoModel> formasPagamentoModel = formaPagamentoModelAssembler
-				.toCollectionModel(restaurante.getFormasPagamento()).removeLinks()
-				.add(algaLinks.linkToRestauranteFormasPagamento(restauranteId))
-				.add(algaLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
+				.toCollectionModel(restaurante.getFormasPagamento()).removeLinks();
+		formasPagamentoModel.add(algaLinks.linkToRestauranteFormasPagamento(restauranteId));
 
-		formasPagamentoModel.getContent().forEach(formaPagamentoModel -> {
-			formaPagamentoModel.add(algaLinks.linkToRestauranteFormaPagamentoDesassociacao(restauranteId,
-					formaPagamentoModel.getId(), "desassociar"));
-		});
+		if (algaSecurity.podeGerenciarFuncionamentoRestaurantes(restauranteId)) {
+			formasPagamentoModel.add(algaLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
+
+			formasPagamentoModel.getContent().forEach(formaPagamentoModel -> {
+				formaPagamentoModel.add(algaLinks.linkToRestauranteFormaPagamentoDesassociacao(restauranteId,
+						formaPagamentoModel.getId(), "desassociar"));
+			});
+		}
 
 		return formasPagamentoModel;
 	}
@@ -56,7 +63,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
-		cadastroResturante.associarFormaPagamento(restauranteId, formaPagamentoId);
+		cadastroRestaurante.associarFormaPagamento(restauranteId, formaPagamentoId);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -65,7 +72,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
-		cadastroResturante.desassociarFormaPagamento(restauranteId, formaPagamentoId);
+		cadastroRestaurante.desassociarFormaPagamento(restauranteId, formaPagamentoId);
 		return ResponseEntity.noContent().build();
 	}
 }
