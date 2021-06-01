@@ -22,8 +22,14 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.formLogin().and().authorizeRequests().antMatchers("/oauth/**").authenticated().and().csrf().disable()
-				.cors().and().oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());
+		http
+		.formLogin().loginPage("/login")
+		.and()
+		.authorizeRequests()
+		.antMatchers("/login").permitAll()
+		.antMatchers("/oauth/**").authenticated().and()
+				.csrf().disable().cors().and().oauth2ResourceServer().jwt()
+				.jwtAuthenticationConverter(jwtAuthenticationConverter());
 	}
 
 	private JwtAuthenticationConverter jwtAuthenticationConverter() {
